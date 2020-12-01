@@ -37,10 +37,13 @@ public class FileUtil {
     public static void writeFile(String content, String fileName) {
         Optional<File> fileOptional = getFile(fileName);
         if (fileOptional.isPresent()) {
-            try (OutputStream outputStream = new FileOutputStream(fileOptional.get())) {
-                outputStream.write(content.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
+            File file = fileOptional.get();
+            if (file.exists()) {
+                try (OutputStream outputStream = new FileOutputStream(file)) {
+                    outputStream.write(content.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -54,7 +57,8 @@ public class FileUtil {
     public static void writeObject(Object obj, String fileName) {
         Optional<File> fileOptional = getFile(fileName);
         if (fileOptional.isPresent()) {
-            try (OutputStream outputStream = new FileOutputStream(fileOptional.get());
+            File file = fileOptional.get();
+            try (OutputStream outputStream = new FileOutputStream(file);
                  ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
                 oos.writeObject(obj);
             } catch (IOException e) {
